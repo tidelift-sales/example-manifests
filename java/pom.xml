@@ -1,0 +1,294 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.example</groupId>
+        <artifactId>common-parent</artifactId>
+        <version>19</version>
+    </parent>
+
+    <prerequisites>
+        <maven>3.3.9</maven>
+    </prerequisites>
+
+    <artifactId>example-parent</artifactId>
+    <!--This version is not used in latest release. See https://mvnrepository.com/artifact/com.example/example-parent -->
+    <version>9999-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/exampleeng/example</url>
+        <connection>scm:git:https://github.com/exampleeng/example.git</connection>
+        <developerConnection>scm:git:git@github.com:exampleeng/example.git</developerConnection>
+    </scm>
+
+    <modules>
+        <module>coverage-report</module>
+        <module>example-ant-plugin</module>
+        <module>example-builder</module>
+        <module>example-codegen</module>
+        <module>example-codegen-test</module>
+        <module>example-common</module>
+        <module>example-consumer</module>
+        <module>example-webapp-library</module>
+        <module>example-webapp</module>
+        <module>example-pipet</module>
+        <module>example-maven-plugin</module>
+        <module>example-store</module>
+        <module>example-store-git</module>
+        <module>example-store-svn</module>
+        <module>example-tomcat-deps</module>
+        <module>example-tomcat-deps-provided</module>
+    </modules>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <example-util.version>1.0.12</example-util.version>
+        <apache-commons-pool2.version>2.2</apache-commons-pool2.version>
+        <commons-lang3.version>3.3.2</commons-lang3.version>
+        <!--
+        the version defined in javadev
+        -->
+        <google-guava.version>16.0.1</google-guava.version>
+        <slf4j.version>1.7.2</slf4j.version>
+        <log4j.version>1.2.14</log4j.version>
+        <!--
+        jackson.core and jackson-databind version can be unified when moving to >2.8.0
+        $jackson.version defined in parent pom for old codehaus jackson
+        -->
+        <jackson.core.version>2.7.9</jackson.core.version>
+        <jackson-databind.version>2.7.9.5</jackson-databind.version>
+        <junit.version>4.12</junit.version>
+        <mockito.version>1.9.5</mockito.version>
+        <assertj.version>3.6.2</assertj.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- argline required for jacoco plugin -->
+                    <argLine>${argLine} -Xmx1024m</argLine>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!-- Automatically creates target/jacoco.exec when running mvn test.
+                     To create html report, run mvn jacoco:report-aggregate
+                -->
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.3</version>
+                <configuration>
+                    <output>file</output>
+                    <append>true</append>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                    <additionalOptions>-Xdoclint:none</additionalOptions>
+                    <additionalJOption>-Xdoclint:none</additionalJOption>
+                </configuration>
+            </plugin>
+        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>2.6</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>3.0.0-M1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>3.0.0-M1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.1.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.7.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.0.0-M3</version>
+                </plugin>
+                <plugin>
+                    <!--
+                        Tomcat7 el library has better performance than Tomcat8 one.
+                        To avoid the performance issue on Tomcat8, example-common and related libraries should be independent of the version of the apache-el of the running environment.
+                        This shaded el library doesn't allow to use Tomcat8 el syntax like assign, concat, arrows, maps.
+                    -->
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>3.2.1</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                            <configuration>
+                                <artifactSet>
+                                    <includes>
+                                        <include>org.apache.tomcat:*</include>
+                                    </includes>
+                                </artifactSet>
+                                <filters>
+                                    <filter>
+                                        <artifact>org.apache.tomcat</artifact>
+                                        <includes>
+                                            <include>org/apache/el/**</include>
+                                            <include>javax/el/**</include>
+                                        </includes>
+                                    </filter>
+                                </filters>
+                                <relocations>
+                                    <relocation>
+                                        <pattern>javax.el.</pattern>
+                                        <shadedPattern>com.example.shaded.javax.el7.</shadedPattern>
+                                    </relocation>
+                                    <relocation>
+                                        <pattern>org.apache.el.</pattern>
+                                        <shadedPattern>com.example.shaded.org.apache.el7.</shadedPattern>
+                                    </relocation>
+                                </relocations>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <!-- Dependencies shared by all subprojects -->
+    <dependencies>
+
+        <!--Common Dependencies-->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${google-guava.version}</version>
+        </dependency>
+
+        <!--Test Dependencies-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymockclassextension</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <!-- Does not add dependencies to children, but provides version, scope and exclusions to any child including these -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson-databind.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.core.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+</project>
